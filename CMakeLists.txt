@@ -81,7 +81,7 @@ endif()
 if (NMEA_BUILD_SHARED_LIB)
     if (POLICY CMP0042)
         cmake_policy(PUSH)
-        cmake_policy(SET CMP0042 OLD)
+        # cmake_policy(SET CMP0042 OLD)
     endif()
 
     set(LIBNMEA_TARGETS ${LIBNMEA_TARGETS} nmea_shared)
@@ -137,7 +137,7 @@ install(FILES ${PARSERS_HDRS} DESTINATION include/nmea)
 configure_file(src/nmea/nmea.h ${PROJECT_BINARY_DIR}/include/nmea.h COPYONLY)
 foreach (HDR ${PARSERS_HDRS})
     get_filename_component(HDR_NAME ${HDR} NAME_WE)
-    message("${HDR}")
+    #message("${HDR}")
     configure_file(${HDR} ${PROJECT_BINARY_DIR}/include/nmea/${HDR_NAME}.h COPYONLY)
 endforeach()
 
@@ -179,14 +179,14 @@ if (NMEA_UNIT_TESTS)
             message(WARNING "Valgrind not found! Tests will be run without memory check. Turn this warning off by installing valgrind or settings -DNMEA_WITH_MEMCHECK=OFF")
             set(NMEA_WITH_MEMCHECK OFF)
         else()
-            message("Found valgrind: ${VALGRIND_PROGRAM}")
+            # message("Found valgrind: ${VALGRIND_PROGRAM}")
         endif()
     endif()
 
     #
     # Lib unit tests.
     #
-    add_executable(utests tests/test_lib.c)
+    add_executable(utests tests/unit-tests/test_lib.c)
 
     if (NMEA_UNIT_TESTS_LINK_STATIC)
         target_link_libraries(utests nmea)
@@ -197,18 +197,18 @@ if (NMEA_UNIT_TESTS)
     #
     # Parse unit tests.
     #
-    add_executable(utests-parse src/parsers/parse.c tests/test_parse.c)
+    add_executable(utests-parse src/parsers/parse.c tests/unit-tests/test_parse.c)
 
     #
     # NMEA unit tests.
     #
-    add_executable(utests-nmea src/nmea/parser.c tests/test_nmea_helpers.c)
+    add_executable(utests-nmea src/nmea/parser.c tests/unit-tests/test_nmea_helpers.c)
     target_link_libraries(utests-nmea dl)
 
     set(TESTS utests utests-parse utests-nmea)
 
     foreach(TEST_NAME ${TESTS})
-        message("${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${TEST_NAME}")
+        # message("${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${TEST_NAME}")
         if (NMEA_WITH_MEMCHECK)
             add_test("${TEST_NAME}_memchk" ${VALGRIND_PROGRAM} --gen-suppressions=all --error-exitcode=5 --leak-check=full ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${TEST_NAME})
 
