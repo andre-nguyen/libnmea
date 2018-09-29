@@ -165,11 +165,6 @@ endif()
 if (NMEA_UNIT_TESTS)
     ENABLE_TESTING()
 
-    # Find test sources.
-    file(GLOB TEST_SRCS
-        RELATIVE "${PROJECT_SOURCE_DIR}"
-        "${PROJECT_SOURCE_DIR}/tests/test_*.c")
-
     # Find valgrind if we're supposed to check for leaks when
     # running the unit tests.
     if (NMEA_WITH_MEMCHECK)
